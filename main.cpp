@@ -48,7 +48,19 @@ int main() {
 
     // Cria as threads
     for(int i = 0; i < NFILS; i++)
-        hThreads.push_back(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&func_thread, &filosofos[i], 0, NULL));
+        hThreads.push_back(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&func_thread, &filosofos[i], CREATE_SUSPENDED, NULL));
+    for (int l = 0; l < hThreads.size(); l++)
+        ResumeThread(hThreads[l]);
+    // Executa o código e para aqui
+    WaitForMultipleObjects(NFILS, hThreads.data(), TRUE, INFINITE);
+    
+    // Suspende todas as threads
+    for (int i = 0; i < hThreads.size(); i++)
+        SuspendThread(hThreads[i]);
+
+    // Remove as threads utilizadas
+    for (int i = 0; i < NFILS; i++)
+        CloseHandle(hThreads[i]);
 
     return 0;
 }
@@ -84,6 +96,10 @@ void comer(int id) {
     filosofos[id].estado = 'e';
     while (!(!garfos[(id + 1) % 5] && !garfos[id] && (verificar_prioridade(id, id - 1) == id) && (verificar_prioridade(id, id + 1)))) {
         std::this_thread::sleep_for(std::chrono::duration<double>(T_BASE/5));
+        std::cout << id << " esperando..." << std::endl;
+        for (struct filosofo fil : filosofos)
+            std::cout << fil.id;
+        std::cout << std::endl;
     }
     filosofos[id].estado = 'c';
     
