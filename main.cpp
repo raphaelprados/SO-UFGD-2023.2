@@ -43,12 +43,12 @@ int main() {
 
     // Vetor de Threads
     std::vector<HANDLE> hThreads;
+    // Pre-processamento
+    tempo_meditacao();
+
     // Cria as threads
     for(int i = 0; i < NFILS; i++)
         hThreads.push_back(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)&func_thread, &filosofos[i], 0, NULL));
-
-    // Pre-processamento
-    tempo_meditacao();
 
     return 0;
 }
@@ -83,7 +83,7 @@ void dormir(int id) {
 void comer(int id) {
     filosofos[id].estado = 'e';
     while (!(!garfos[(id + 1) % 5] && !garfos[id] && (verificar_prioridade(id, id - 1) == id) && (verificar_prioridade(id, id + 1)))) {
-        std::this_thread::sleep_for(std::chrono::duration<double>(T_BASE));
+        std::this_thread::sleep_for(std::chrono::duration<double>(T_BASE/5));
     }
     filosofos[id].estado = 'c';
     
@@ -91,7 +91,7 @@ void comer(int id) {
         garfos[(id + 1) % 5] = true;
         garfos[id] = true;
     ReleaseMutex(mutex_garfo);
-    std::this_thread::sleep_for(std::chrono::duration<double>(T_BASE));
+    std::cout << "O filosofo " << id << " esta comendo!" << std::endl;
     WaitForSingleObject(mutex_garfo, INFINITE);
         garfos[(id + 1) % 5] = false;
         garfos[id] = false;
