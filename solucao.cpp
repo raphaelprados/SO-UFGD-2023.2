@@ -14,6 +14,7 @@
 int hashis[5] = { -1, -1, -1, -1, -1 };
 int T_BASE = 300;
 const int NFILS = 5;
+bool req_hashi[5] = { false, false, false, false, false };
 
 // Mutex
 HANDLE mutex_hashi[5];
@@ -57,7 +58,7 @@ void comer(int id) {
 			std::cout << id << " filosofo pegou o hashi esquerdo!" << std::endl;
 			ReleaseMutex(mutex_io);
 		}
-		sucesso = (hashis[dir] == id) && (hashis[esq] = id);
+		sucesso = (hashis[dir] == id) && (hashis[esq] == id);
 		if (!sucesso) {
 			espera++;
 			WaitForSingleObject(mutex_io, INFINITE);
