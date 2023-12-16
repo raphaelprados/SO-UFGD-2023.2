@@ -57,7 +57,7 @@ void comer(int id) {
 			std::cout << id << " filosofo pegou o hashi esquerdo!" << std::endl;
 			ReleaseMutex(mutex_io);
 		}
-		sucesso = (hashis[dir] == id) && (hashis[esq] = id);
+		sucesso = (hashis[dir] == id) && (hashis[esq] == id);
 		if (!sucesso) {
 			espera++;
 			WaitForSingleObject(mutex_io, INFINITE);
