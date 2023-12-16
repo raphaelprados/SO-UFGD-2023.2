@@ -12,7 +12,7 @@
 
 // Variáveis Globais
 int hashis[5] = { -1, -1, -1, -1, -1 };
-int T_BASE = 500;
+int T_BASE = 300;
 const int NFILS = 5;
 
 // Mutex
@@ -81,13 +81,13 @@ void comer(int id) {
 }
 
 void meditar(int id) {
-	std::cout << "entrou" << std::endl;
-	int t_meditacao = T_BASE + (rand()) % 2 * T_BASE;
+	std::random_device dev;
+	std::mt19937 rng(dev());
+	std::uniform_int_distribution<std::mt19937::result_type> dist6(T_BASE, 3*T_BASE);
 	WaitForSingleObject(mutex_io, INFINITE);
-	std::cout << id << " filosofo ira meditar por " << t_meditacao << "ms" << std::endl;
+	std::cout << id << " filosofo ira meditar por " << dist6(rng) << "ms" << std::endl;
 	ReleaseMutex(mutex_io);
-	std::this_thread::sleep_for(std::chrono::milliseconds(t_meditacao)); // Chamada para thread/filosofo dormir
-
+	std::this_thread::sleep_for(std::chrono::milliseconds(dist6(rng))); // Chamada para thread/filosofo dormir
 }
 
 void acoes(int id) {
