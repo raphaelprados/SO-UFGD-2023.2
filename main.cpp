@@ -63,20 +63,20 @@ void comer(int id) {
 		if(!sucesso) {
 			WaitForSingleObject(mutex_io, INFINITE);
 			std::cout << id << "o filosofo nao consegue comer!" << std::endl;
-			std::this_thread::sleep_for(std::chrono::milliseconds(300));
+			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 			ReleaseMutex(mutex_io);
 		}
 		else {
 			WaitForSingleObject(mutex_io, INFINITE);
 			std::cout << id << "o filosofo esta comendo!" << std::endl;
-			std::this_thread::sleep_for(std::chrono::milliseconds(600));
+			std::this_thread::sleep_for(std::chrono::milliseconds(60));
 			ReleaseMutex(mutex_io);
 		}
 		WaitForSingleObject(mutex_hashi, INFINITE);
 		hashis[(id + 1) % NFILS] = -1;
 		hashis[id] = -1;
 		WaitForSingleObject(mutex_io, INFINITE);
-		std::cout << id << "o filosofo esta comendo!" << std::endl;
+		std::cout << id << "o filosofo liberou os hashis!" << std::endl;
 		ReleaseMutex(mutex_io);
 		ReleaseMutex(mutex_hashi);
 		if (sucesso)
@@ -86,11 +86,11 @@ void comer(int id) {
 
 void meditar(int id) {
 	std::cout << "entrou" << std::endl;
-	double t_meditacao = T_BASE / 2 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX / T_BASE);
+	int t_meditacao = (rand()) % 100;
 	WaitForSingleObject(mutex_io, INFINITE);
-	std::cout << id << "o filosofo ira meditar por " << t_meditacao << "s" << std::endl;
+	std::cout << id << "o filosofo ira meditar por " << t_meditacao << "ms" << std::endl;
 	ReleaseMutex(mutex_io);
-	std::this_thread::sleep_for(std::chrono::duration<double>(t_meditacao)); // Chamada para thread/filosofo dormir
+	std::this_thread::sleep_for(std::chrono::milliseconds(t_meditacao)); // Chamada para thread/filosofo dormir
 
 }
 
